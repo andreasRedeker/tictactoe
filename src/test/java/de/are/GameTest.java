@@ -89,5 +89,8 @@ public class GameTest {
         statistics.incrementWin(Player.PLAYER_X);
         statistics.incrementWin(Player.PLAYER_O);
         statistics.incrementWin(Player.PLAYER_X);
+
+        assertEquals(statistics.getWinsO(), 1);
+        assertEquals(statistics.getWinsX(), 2);
     }
 }
