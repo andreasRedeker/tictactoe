@@ -32,10 +32,11 @@ public class Game {
         System.out.println("Press \"p\" for stats, \"e\" to close the game at any time.");
 
         while (running) {
+            clearConsole();
+            board.printBoard();
             String winner = board.checkWinner();
+
             if (winner != null) {
-                clearConsole();
-                board.printBoard();
                 System.out.println(winner + " won. Press enter to start a new round");
                 if (inputHandler.getInput().isEmpty()) {
                     statistics.incrementWin(winner);
@@ -43,59 +44,52 @@ public class Game {
                     startNewGame();
                 }
             } else if (board.isFull()) {
-                clearConsole();
-                board.printBoard();
                 System.out.println("It's a tie. Press enter to start a new round");
                 lastWinner = null;
                 if (inputHandler.getInput().isEmpty()) {
                     startNewGame();
                 }
             } else {
-                promptPlayerMove();
+                System.out.println(currentPlayer.getSymbol() + ": Please enter the position of your mark (Row:Column):");
+                String input = inputHandler.getInput();
+
+                switch (input) {
+                    case "p":
+                        clearConsole();
+                        statistics.printStats();
+                        inputHandler.getInput();
+                        break;
+                    case "e":
+                        inputHandler.closeScanner();
+                        running = false;
+                        break;
+                    default:
+                        handleMove(input);
+                        break;
+                }
             }
         }
     }
 
-    public void promptPlayerMove() {
+    private void handleMove(String input) {
         String message = null;
 
-        while (true) {
+        if (inputHandler.isValidFormat(input)) {
+            int[] move = inputHandler.formatInput(input);
+            if (board.isFieldEmpty(move[0], move[1])) {
+                board.setMove(move[0], move[1], currentPlayer.getSymbol());
+                switchPlayer();
+            } else {
+                message = "The selected field is already occupied. Try again.";
+            }
+        } else {
+            message = "The inserted field is not valid. Try again:";
+        }
+
+        if (message != null) {
             clearConsole();
             board.printBoard();
-
-            if (message != null) {
-                System.out.println(message);
-                message = null;
-            }
-
-            System.out.println(currentPlayer.getSymbol() + ": Please enter the position of your mark (Row:Column):");
-            String input = inputHandler.getInput();
-
-            switch (input) {
-                case "p":
-                    clearConsole();
-                    statistics.printStats();
-                    inputHandler.getInput();
-                    break;
-                case "e":
-                    inputHandler.closeScanner();
-                    System.exit(0); // exit game
-                    break;
-                default:
-                    if (inputHandler.isValidFormat(input)) {
-                        int[] move = inputHandler.formatInput(input);
-                        if (board.isFieldEmpty(move[0], move[1])) {
-                            board.setMove(move[0], move[1], currentPlayer.getSymbol());
-                            switchPlayer();
-                            return; // break out method to continue main game loop
-                        } else {
-                            message = "The selected field is already occupied. Try again.";
-                        }
-                    } else {
-                        message = "The inserted field is not valid. Try again:";
-                    }
-                    break;
-            }
+            System.out.println(message);
         }
     }
 
