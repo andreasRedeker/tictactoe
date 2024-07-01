@@ -6,7 +6,9 @@ package de.are;
  */
 public class Game {
     private Board board;
+
     private Player currentPlayer;
+
     private Statistics statistics;
     private InputHandler inputHandler;
     private String lastWinner;
@@ -35,9 +37,9 @@ public class Game {
                 clearConsole();
                 board.printBoard();
                 System.out.println(winner + " won. Press enter to start a new round");
-                statistics.incrementWin(winner);
-                lastWinner = winner;
                 if (inputHandler.getInput().isEmpty()) {
+                    statistics.incrementWin(winner);
+                    lastWinner = winner;
                     startNewGame();
                 }
             } else if (board.isFull()) {
