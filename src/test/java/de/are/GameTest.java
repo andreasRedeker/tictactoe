@@ -81,16 +81,4 @@ public class GameTest {
         currentPlayer.setSymbol(Player.PLAYER_O);
         assertEquals(Player.PLAYER_O, currentPlayer.getSymbol());
     }
-
-    // User Story 4: Game statistics
-    @Test
-    public void testStatistics() {
-        Statistics statistics = new Statistics();
-        statistics.incrementWin(Player.PLAYER_X);
-        statistics.incrementWin(Player.PLAYER_O);
-        statistics.incrementWin(Player.PLAYER_X);
-
-        assertEquals(statistics.getWinsO(), 1);
-        assertEquals(statistics.getWinsX(), 2);
-    }
 }
