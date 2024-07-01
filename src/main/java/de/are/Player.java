@@ -19,4 +19,12 @@ public class Player {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void incrementWins() {
+        this.wins++;
+    }
 }

@@ -7,6 +7,8 @@ package de.are;
 public class Game {
     private Board board;
 
+    private Player playerX;
+    private Player playerO;
     private Player currentPlayer;
 
     private Statistics statistics;
@@ -16,8 +18,10 @@ public class Game {
 
     public Game() {
         this.board = new Board();
-        this.currentPlayer = new Player(Player.PLAYER_X);
-        this.statistics = new Statistics();
+        this.playerX = new Player(Player.PLAYER_X);
+        this.playerO = new Player(Player.PLAYER_O);
+        this.currentPlayer = playerX;
+        this.statistics = new Statistics(playerX, playerO);
         this.inputHandler = new InputHandler();
         this.lastWinner = null;
     }
@@ -39,7 +43,11 @@ public class Game {
             if (winner != null) {
                 System.out.println(winner + " won. Press enter to start a new round");
                 if (inputHandler.getInput().isEmpty()) {
-                    statistics.incrementWin(winner);
+                    if (winner.equals(Player.PLAYER_X)) {
+                        playerX.incrementWins();
+                    } else {
+                        playerO.incrementWins();
+                    }
                     lastWinner = winner;
                     startNewGame();
                 }
@@ -94,15 +102,15 @@ public class Game {
     }
 
     void switchPlayer() {
-        currentPlayer.setSymbol(currentPlayer.getSymbol().equals(Player.PLAYER_X) ? Player.PLAYER_O : Player.PLAYER_X);
+        currentPlayer = currentPlayer.equals(playerX) ? playerO : playerX;
     }
 
     private void startNewGame() {
         board.prepareBoard();
         if (lastWinner == null || lastWinner.equals(Player.PLAYER_O)) {
-            currentPlayer.setSymbol(Player.PLAYER_X);
+            currentPlayer = playerX;
         } else {
-            currentPlayer.setSymbol(Player.PLAYER_O);
+            currentPlayer = playerO;
         }
     }
 
